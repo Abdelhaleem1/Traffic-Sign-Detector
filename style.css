@@ -1,0 +1,19 @@
+img {
+ aspect-ratio: 3/2;
+ object-fit: contain !important;
+}
+
+video {
+ width: 70% !important;
+ aspect-ratio: 16 / 9;
+}
+
+#MainMenu {
+ display: none;
+}
+footer {
+ display: none;
+}
+header {
+ display: none;
+}
