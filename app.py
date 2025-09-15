@@ -97,11 +97,10 @@ with tabs[1]:
 
         with st.spinner("⏳ Processing image... Please wait."):
             demoImg = picDetect(imgPath = dempPath, model=model, reader=reader)
-        demoImg = cv2.cvtColor(demoImg, cv2.COLOR_BGR2RGB)
-
-        col1, col2 = st.columns(2)
-        col1.image(dempPath, caption="Original", width='stretch')
-        col2.image(demoImg, caption="Detection", width='stretch')
+            demoImg = cv2.cvtColor(demoImg, cv2.COLOR_BGR2RGB)
+            col1, col2 = st.columns(2)
+            col1.image(dempPath, caption="Original", width='stretch')
+            col2.image(demoImg, caption="Detection", width='stretch')
 
     with upload_tab:
             st.subheader("Upload Your Own Image")
@@ -125,4 +124,5 @@ with tabs[2]:
     st.subheader("Detection Example")
     col1, col2 = st.columns(2)
     col1.image("demo/test4.webp", caption="Original Image", width='stretch')
+
     col2.image(cv2.cvtColor(picDetect(imgPath="demo/test4.webp", model=model, reader=reader), cv2.COLOR_BGR2RGB), caption="Detected Image", width='stretch')
