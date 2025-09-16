@@ -31,22 +31,23 @@ def ocrDetect(img, x1, y1, x2, y2, reader):
 def picDetect(imgPath=None, pic=None, model=None, reader = None):
     if imgPath is not None:
         pic = cv2.imread(imgPath)
-    h, w, _ = pic.shape
-    resizedpic = cv2.resize(pic, (640, 640))
     box_colors = [(0, 255, 255),(128, 0, 128),(255, 0, 0),(0, 165, 255),
                 (0, 255, 0), (255, 0, 255), (255, 255, 0), (0, 0, 255)]
+    resizedpic = cv2.resize(pic, (640, 640))
+    h, w, _ = pic.shape
+    x_ratio = w / 640
+    y_ratio = h / 640
     names = model.names
     results = model.predict(resizedpic, conf = 0.45 , verbose=False)
     result = results[0]
     boxes = result.boxes
-    x_ratio = w / 640
-    y_ratio = h / 640
     for box in boxes:
         cls = box.cls.item()
         clsName = names[cls]
         conf = f"{int(box.conf.item()*100)}%"
         x1, y1, x2, y2 = box.xyxy[0].cpu().numpy().astype(int)
-        x1, y1, x2, y2 = [int(x1 * x_ratio), int(y1 * y_ratio), int(x2 * x_ratio), int(y2 * y_ratio)]
+        x1, y1, x2, y2 = [int(x1 * x_ratio), int(y1 * y_ratio), 
+                          int(x2 * x_ratio), int(y2 * y_ratio)]
         color = box_colors[int(cls)]
         cv2.rectangle(pic, (x1, y1), (x2, y2), color, 2)
         if clsName == "Speed_Limit":
@@ -79,3 +80,4 @@ def vidDetect(vidPath, model=None, reader = None, outputPath=None):
         out.write(picDetect(pic=frame, model=model, reader=reader))
     vid.release()
     out.release()
+
