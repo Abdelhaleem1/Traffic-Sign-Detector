@@ -1,6 +1,11 @@
 import cv2
+import easyocr
+from ultralytics import YOLO
 import warnings
 warnings.filterwarnings("ignore")
+if __name__ == "__main__":
+    model = YOLO("best.pt")
+    reader = easyocr.Reader(['en'], gpu=False)
 
 def put_text(pic, x1, y1, x2, y2, color, text):
     h, w, _ = pic.shape
@@ -31,6 +36,7 @@ def ocrDetect(img, x1, y1, x2, y2, reader):
 def picDetect(imgPath=None, pic=None, model=None, reader = None):
     if imgPath is not None:
         pic = cv2.imread(imgPath)
+    texts = []
     box_colors = [(0, 255, 255),(128, 0, 128),(255, 0, 0),(0, 165, 255),
                 (0, 255, 0), (255, 0, 255), (255, 255, 0), (0, 0, 255)]
     resizedpic = cv2.resize(pic, (640, 640))
@@ -55,9 +61,10 @@ def picDetect(imgPath=None, pic=None, model=None, reader = None):
             text = f'{clsName} {speed}: {conf}'
         else: 
             text = f'{clsName}: {conf}'
+        texts.append(text)
         pic = put_text(pic, x1, y1, x2, y2, color, text)
     pic = cv2.resize(pic, (w, h))
-    return pic
+    return pic, len(boxes), texts
 
 
 
@@ -80,4 +87,3 @@ def vidDetect(vidPath, model=None, reader = None, outputPath=None):
         out.write(picDetect(pic=frame, model=model, reader=reader))
     vid.release()
     out.release()
-

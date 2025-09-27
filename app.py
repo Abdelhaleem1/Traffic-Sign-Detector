@@ -1,9 +1,9 @@
 import streamlit as st
 import numpy as np
 import cv2
-from PIL import Image
 import easyocr
 from ultralytics import YOLO
+from PIL import Image
 from main import picDetect
 import pathlib
 
@@ -33,7 +33,7 @@ with tabs[0]:
     st.write("""
     This project focuses on detecting and classifying traffic signs such as 
     **Speed Limits, Stop, No Parking, Pedestrian Crossings**, and more.  
-    It uses **YOLOv8 for object detection** and **OCR (EasyOCR)** for reading numbers inside speed limit signs.
+    It uses **:red[YOLOv8] for object detection** and **:red[OCR] (EasyOCR)** for reading numbers inside speed limit signs.
     """)
 
     st.subheader("🛑 Supported Classes")
@@ -62,6 +62,9 @@ with tabs[0]:
         st.write(classes[6])
         st.write(classes[7])
 
+    st.subheader("🛠️ Technologies Used")
+    st.write("""Python - Roboflow - Ultralytics YOLO - OpenCV - EasyOCR - Streamlit""")
+    st.write("")
     st.subheader("👨‍💻 Team Members")
     cols = st.columns(3)
     with cols[0]:
@@ -70,15 +73,6 @@ with tabs[0]:
         st.markdown("**Mohannad Ashraf**  \n[LinkedIn](https://www.linkedin.com/in/mohannad-ashraf-888b24328/)  |  [GitHub](https://github.com/MohannadAshraf14)")
     with cols[2]:
         st.markdown("**Eyad Hazem**  \n[LinkedIn](https://www.linkedin.com/in/eyad-hazem-030574330)  |  [GitHub](https://github.com/Eyadhazem1)")
-
-    st.subheader("🛠️ Technologies Used")
-    st.write("""
-    - Python
-    - Roboflow
-    - Ultralytics YOLO
-    - OpenCV
-    - EasyOCR
-    - Streamlit""")
 
 with tabs[1]:
     st.header("Try the Model")
@@ -96,12 +90,16 @@ with tabs[1]:
         dempPath = Demos[choice]
 
         with st.spinner("⏳ Processing image... Please wait."):
-            demoImg = picDetect(imgPath = dempPath, model=model, reader=reader)
-            demoImg = cv2.cvtColor(demoImg, cv2.COLOR_BGR2RGB)
-            col1, col2 = st.columns(2)
-            col1.image(dempPath, caption="Original", width='stretch')
-            col2.image(demoImg, caption="Detection", width='stretch')
+            demoImg, n, texts = picDetect(imgPath = dempPath, model=model, reader=reader)
+        demoImg = cv2.cvtColor(demoImg, cv2.COLOR_BGR2RGB)
 
+        col1, col2 = st.columns(2)
+        col1.image(dempPath, caption="Original", width='stretch')
+        col2.image(demoImg, caption="Detection", width='stretch')
+        st.subheader("Results:")
+        st.write(f"Detected :green[{n}] object/s")
+        for i in range(n):
+            st.write(f"Detected: :green[{texts}]")
     with upload_tab:
             st.subheader("Upload Your Own Image")
             file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png", "webp"])
@@ -109,20 +107,27 @@ with tabs[1]:
                 img = np.array(Image.open(file))
                 img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
                 with st.spinner("⏳ Processing image... Please wait."):
-                    output_img = picDetect(pic=img, model=model, reader=reader)
-                output_rgb = cv2.cvtColor(output_img, cv2.COLOR_BGR2RGB)
-                col1, col2 = st.columns(2)
-                col1.image(file, caption="Original Image", width='stretch')
-                col2.image(output_rgb, caption="Detected Image", width='stretch')
+                    output_img, n, texts = picDetect(pic=img, model=model, reader=reader)
+                if (n == 0 ):
+                    st.subheader(":red[Failed to detect object/s]")
+                else:
+                    output_rgb = cv2.cvtColor(output_img, cv2.COLOR_BGR2RGB)
+                    col1, col2 = st.columns(2)
+                    col1.image(file, caption="Original Image", width='stretch')
+                    col2.image(output_rgb, caption="Detected Image", width='stretch')
+                    st.subheader("Results:")
+                    st.write(f"Detected :green[{n}] object/s")
+                    for i in range(n):
+                        st.write(f"Detected: :green[{texts}]")
+
 
 with tabs[2]:
     st.header("Model Results & Performance")
     col1, col2, col3 = st.columns(3)
-    col1.metric("mAP50", "92%")
+    col1.metric("mAP50", "92%") 
     col2.metric("Precision", "93%")
     col3.metric("Recall", "88%")
     st.subheader("Detection Example")
     col1, col2 = st.columns(2)
     col1.image("demo/test4.webp", caption="Original Image", width='stretch')
-
-    col2.image(cv2.cvtColor(picDetect(imgPath="demo/test4.webp", model=model, reader=reader), cv2.COLOR_BGR2RGB), caption="Detected Image", width='stretch')
+    col2.image(cv2.cvtColor(picDetect(imgPath="demo/test4.webp", model=model, reader=reader)[0], cv2.COLOR_BGR2RGB), caption="Detected Image", width='stretch')

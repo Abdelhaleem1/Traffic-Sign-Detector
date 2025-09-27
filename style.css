@@ -17,3 +17,6 @@ footer {
 header {
  display: none;
 }
+p {
+ font-size: 17.5px !important;
+}
