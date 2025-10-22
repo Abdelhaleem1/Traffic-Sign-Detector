@@ -94,8 +94,8 @@ with tabs[1]:
         demoImg = cv2.cvtColor(demoImg, cv2.COLOR_BGR2RGB)
 
         col1, col2 = st.columns(2)
-        col1.image(dempPath, caption="Original", width='stretch')
-        col2.image(demoImg, caption="Detection", width='stretch')
+        col1.image(dempPath, caption="Original", use_column_width=True)
+        col2.image(demoImg, caption="Detection", use_column_width=True)
         st.subheader("Results:")
         st.write(f"Detected :green[{n}] object/s")
         for i in range(n):
@@ -113,8 +113,8 @@ with tabs[1]:
                 else:
                     output_rgb = cv2.cvtColor(output_img, cv2.COLOR_BGR2RGB)
                     col1, col2 = st.columns(2)
-                    col1.image(file, caption="Original Image", width='stretch')
-                    col2.image(output_rgb, caption="Detected Image", width='stretch')
+                    col1.image(file, caption="Original Image", use_column_width=True)
+                    col2.image(output_rgb, caption="Detected Image", use_column_width=True)
                     st.subheader("Results:")
                     st.write(f"Detected :green[{n}] object/s")
                     for i in range(n):
@@ -129,6 +129,7 @@ with tabs[2]:
     col3.metric("Recall", "88%")
     st.subheader("Detection Example")
     col1, col2 = st.columns(2)
-    col1.image("demo/test4.webp", caption="Original Image", width='stretch')
+    col1.image("demo/test4.webp", caption="Original Image", use_column_width=True)
 
-    col2.image(cv2.cvtColor(picDetect(imgPath="demo/test4.webp", model=model, reader=reader)[0], cv2.COLOR_BGR2RGB), caption="Detected Image", width='stretch')
+    col2.image(cv2.cvtColor(picDetect(imgPath="demo/test4.webp", model=model, reader=reader)[0], cv2.COLOR_BGR2RGB), caption="Detected Image", use_column_width=True)
+
