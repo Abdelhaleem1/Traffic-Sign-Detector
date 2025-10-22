@@ -1,4 +1,5 @@
 import streamlit as st
+st.set_page_config(page_title="Traffic Sign Detector", layout="wide", page_icon='🛑')
 import numpy as np
 import cv2
 import easyocr
@@ -24,7 +25,6 @@ css_path = pathlib.Path("style.css")
 load_css(css_path)
 
 
-st.set_page_config(page_title="Traffic Sign Detector", layout="wide", page_icon='🛑')
 st.title("Traffic Sign Detector 🛑")
 tabs = st.tabs(["📖 About", "🧪 Try", "📊 Results"])
 
@@ -130,4 +130,5 @@ with tabs[2]:
     st.subheader("Detection Example")
     col1, col2 = st.columns(2)
     col1.image("demo/test4.webp", caption="Original Image", width='stretch')
+
     col2.image(cv2.cvtColor(picDetect(imgPath="demo/test4.webp", model=model, reader=reader)[0], cv2.COLOR_BGR2RGB), caption="Detected Image", width='stretch')
