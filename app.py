@@ -98,7 +98,7 @@ with tabs[1]:
 
         col1, col2 = st.columns(2)
         col1.image(str(dempPath), caption="Original", width='stretch')
-        col2.image(str(demoImg), caption="Detection", width='stretch')
+        col2.image(demoImg, caption="Detection", width='stretch')
         st.subheader("Results:")
         st.write(f"Detected :green[{n}] object/s")
         for i in range(n):
