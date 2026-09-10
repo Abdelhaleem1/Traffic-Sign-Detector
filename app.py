@@ -1,5 +1,4 @@
 import streamlit as st
-st.set_page_config(page_title="Traffic Sign Detector", layout="wide", page_icon='🛑')
 import numpy as np
 import cv2
 import easyocr
@@ -28,6 +27,7 @@ css_path = pathlib.Path("style.css")
 load_css(css_path)
 
 
+st.set_page_config(page_title="Traffic Sign Detector", layout="wide", page_icon='🛑')
 st.title("Traffic Sign Detector 🛑")
 tabs = st.tabs(["📖 About", "🧪 Try", "📊 Results"])
 
@@ -77,6 +77,7 @@ with tabs[0]:
     with cols[2]:
         st.markdown("**Eyad Hazem**  \n[LinkedIn](https://www.linkedin.com/in/eyadhazem/)  |  [GitHub](https://github.com/Eyadhazem1)")
 
+
 with tabs[1]:
     st.header("Try the Model")
     demo_tab, upload_tab = st.tabs(["🎞️ Demo Samples", "📤 Upload Your Own"])
@@ -91,6 +92,7 @@ with tabs[1]:
 
         choice = st.selectbox("Choose a demo image:", list(Demos.keys()))
         dempPath = BASE_DIR / Demos[choice]
+
 
         with st.spinner("⏳ Processing image... Please wait."):
             demoImg, n, texts = picDetect(imgPath = dempPath, model=model, reader=reader)
@@ -116,8 +118,8 @@ with tabs[1]:
                 else:
                     output_rgb = cv2.cvtColor(output_img, cv2.COLOR_BGR2RGB)
                     col1, col2 = st.columns(2)
-                    col1.image(file, caption="Original Image", use_column_width=True)
-                    col2.image(output_rgb, caption="Detected Image", use_column_width=True)
+                    col1.image(file, caption="Original Image", width='stretch')
+                    col2.image(output_rgb, caption="Detected Image", width='stretch')
                     st.subheader("Results:")
                     st.write(f"Detected :green[{n}] object/s")
                     for i in range(n):
@@ -132,7 +134,8 @@ with tabs[2]:
     col3.metric("Recall", "88%")
     st.subheader("Detection Example")
     col1, col2 = st.columns(2)
-    col1.image(str(BASE_DIR / "demo/test4.webp"), caption="Original Image", width='stretch')
-
-    col2.image(cv2.cvtColor(picDetect(imgPath="demo/test4.webp", model=model, reader=reader)[0], cv2.COLOR_BGR2RGB), caption="Detected Image", use_column_width=True)
-
+    imgPath = BASE_DIR / "demo/test4.webp"
+    col1.image(str(imgPath), caption="Original Image", width='stretch')
+    with st.spinner("⏳ Processing image... Please wait."):
+        pic, n, texts = picDetect(imgPath=str(imgPath), model=model, reader=reader)
+    col2.image(cv2.cvtColor(pic, cv2.COLOR_BGR2RGB), caption="Detected Image", width='stretch')
