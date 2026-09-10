@@ -8,6 +8,9 @@ from PIL import Image
 from main import picDetect
 import pathlib
 
+BASE_DIR = pathlib.Path(__file__).resolve().parent
+
+
 @st.cache_resource
 def load_model(weight_path="best.pt"):
     return YOLO(weight_path)
@@ -68,11 +71,11 @@ with tabs[0]:
     st.subheader("👨‍💻 Team Members")
     cols = st.columns(3)
     with cols[0]:
-        st.markdown("**Abdelhalim Ahmed**  \n[LinkedIn](https://www.linkedin.com/in/abdelhalim-ahmed-720827248/)  |  [GitHub](https://github.com/Abdelhaleem1)")
+        st.markdown("**Abdelhalim Ahmed**  \n[LinkedIn](https://www.linkedin.com/in/abdelhalim-ahmed-salah/)  |  [GitHub](https://github.com/Abdelhaleem1)")
     with cols[1]:
         st.markdown("**Mohannad Ashraf**  \n[LinkedIn](https://www.linkedin.com/in/mohannad-ashraf-888b24328/)  |  [GitHub](https://github.com/MohannadAshraf14)")
     with cols[2]:
-        st.markdown("**Eyad Hazem**  \n[LinkedIn](https://www.linkedin.com/in/eyad-hazem-030574330)  |  [GitHub](https://github.com/Eyadhazem1)")
+        st.markdown("**Eyad Hazem**  \n[LinkedIn](https://www.linkedin.com/in/eyadhazem/)  |  [GitHub](https://github.com/Eyadhazem1)")
 
 with tabs[1]:
     st.header("Try the Model")
@@ -87,15 +90,15 @@ with tabs[1]:
         }
 
         choice = st.selectbox("Choose a demo image:", list(Demos.keys()))
-        dempPath = Demos[choice]
+        dempPath = BASE_DIR / Demos[choice]
 
         with st.spinner("⏳ Processing image... Please wait."):
             demoImg, n, texts = picDetect(imgPath = dempPath, model=model, reader=reader)
         demoImg = cv2.cvtColor(demoImg, cv2.COLOR_BGR2RGB)
 
         col1, col2 = st.columns(2)
-        col1.image(dempPath, caption="Original", use_column_width=True)
-        col2.image(demoImg, caption="Detection", use_column_width=True)
+        col1.image(str(dempPath), caption="Original", width='stretch')
+        col2.image(str(demoImg), caption="Detection", width='stretch')
         st.subheader("Results:")
         st.write(f"Detected :green[{n}] object/s")
         for i in range(n):
