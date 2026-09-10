@@ -35,7 +35,11 @@ def ocrDetect(img, x1, y1, x2, y2, reader):
 
 def picDetect(imgPath=None, pic=None, model=None, reader = None):
     if imgPath is not None:
-        pic = cv2.imread(imgPath)
+        pic = cv2.imread(str(imgPath))
+    if pic is None:
+        raise ValueError("An image is required for detection")
+    if model is None:
+        raise ValueError("A model is required for detection")
     texts = []
     box_colors = [(0, 255, 255),(128, 0, 128),(255, 0, 0),(0, 165, 255),
                 (0, 255, 0), (255, 0, 255), (255, 255, 0), (0, 0, 255)]
@@ -66,24 +70,3 @@ def picDetect(imgPath=None, pic=None, model=None, reader = None):
     pic = cv2.resize(pic, (w, h))
     return pic, len(boxes), texts
 
-
-
-def vidDetect(vidPath, model=None, reader = None, outputPath=None):
-    vid = cv2.VideoCapture(vidPath)
-    fourcc = cv2.VideoWriter_fourcc(*"mp4v") 
-    fps = int(vid.get(cv2.CAP_PROP_FPS)) or 30
-    width = int(vid.get(cv2.CAP_PROP_FRAME_WIDTH))
-    height = int(vid.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    out = cv2.VideoWriter(outputPath,fourcc, fps, (width, height))
-    frame_count = 0
-    while True:
-        isFrame, frame = vid.read() # bool is there a pic, frame
-        if not isFrame:
-            break
-        frame_count += 1
-        if frame_count % 15 == 0:
-            out.write(frame)
-            continue
-        out.write(picDetect(pic=frame, model=model, reader=reader))
-    vid.release()
-    out.release()
