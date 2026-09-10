@@ -132,7 +132,7 @@ with tabs[2]:
     col3.metric("Recall", "88%")
     st.subheader("Detection Example")
     col1, col2 = st.columns(2)
-    col1.image("demo/test4.webp", caption="Original Image", use_column_width=True)
+    col1.image(str(BASE_DIR / "demo/test4.webp"), caption="Original Image", width='stretch')
 
     col2.image(cv2.cvtColor(picDetect(imgPath="demo/test4.webp", model=model, reader=reader)[0], cv2.COLOR_BGR2RGB), caption="Detected Image", use_column_width=True)
 
